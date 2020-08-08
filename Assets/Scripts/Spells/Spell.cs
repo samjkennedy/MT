@@ -26,7 +26,11 @@ public class Spell : MonoBehaviour
 
     void Update()
     {
-        controller.Move(style.GetNextPos(ref velocity, Time.deltaTime));
+        style.GetNextPos(ref velocity, Time.deltaTime);
+        if (mutation != null) {
+            mutation.AlterPath(ref velocity, Time.deltaTime);
+        }
+        controller.Move(velocity * Time.deltaTime);
 
         if (controller.collisions.any) {
             RaycastHit2D hit = controller.collisions.hit;
