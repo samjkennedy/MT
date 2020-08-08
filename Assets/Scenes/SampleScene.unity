@@ -656,6 +656,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 8168502535345165792, guid: c774d876715bcb541a47df6de17564e2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8168502535345165799, guid: c774d876715bcb541a47df6de17564e2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1434,6 +1439,54 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1551627362
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1551627363}
+  - component: {fileID: 1551627364}
+  m_Layer: 8
+  m_Name: Self Spell Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1551627363
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1551627362}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1890028342}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1551627364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1551627362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e02a3865fd00cc84c8f3c74794caea27, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1890028339}
+  element: {fileID: 4424169463537815573, guid: 54481748a5b9cc44a9bf59e0c63cd4d3, type: 3}
+  style: {fileID: 3560304774823738646, guid: 7695fde5549c08b41b0a2b9bcbc2e7c9, type: 3}
+  spellPrefab: {fileID: 7339602538506331998, guid: 561ccfd4228b48a49b5565cc26babb1e,
+    type: 3}
 --- !u!1 &1635925017
 GameObject:
   m_ObjectHideFlags: 0
@@ -1607,6 +1660,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Pyromancer
+      objectReference: {fileID: 0}
+    - target: {fileID: 1910524664785828911, guid: 3fa0fce998517dc46ad2b5b68f220a5a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3fa0fce998517dc46ad2b5b68f220a5a, type: 3}
@@ -2101,6 +2159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26cc120fc3e913641bfbd70b1690804d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  velocity: {x: 0, y: 0, z: 0}
   health: {fileID: 1791432464}
 --- !u!61 &1890028340
 BoxCollider2D:
@@ -2190,6 +2249,7 @@ Transform:
   m_Children:
   - {fileID: 709378771}
   - {fileID: 1791432465}
+  - {fileID: 1551627363}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

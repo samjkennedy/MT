@@ -14,7 +14,6 @@ public class Player : MonoBehaviour
     private float accelerationTimeAirborne = 0.1f;
     private float accelerationTimeGrounded = 0.05f;
     private float movementSpeed = 10f;
-    private float dashTime = 0.3f;
 
     //Could be useful later for respawning after falling off the map?
     //Place player back at doorway?
@@ -26,8 +25,7 @@ public class Player : MonoBehaviour
     private int extraJumps = 1;
     private int remainingExtraJumps = 1;
 
-    private Vector3 velocity;
-    public Vector3 Velocity => velocity;
+    public Vector3 velocity;
     private float velocityXSmoothing;
 
     //Wall jumping
@@ -44,14 +42,12 @@ public class Player : MonoBehaviour
 
     //Components
     Controller2D controller;
-    TrailRenderer trailRenderer;
     SpriteRenderer spriteRenderer;
 
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<Controller2D>();
-        trailRenderer = GetComponent<TrailRenderer>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         spawnPos = transform.position;
@@ -122,11 +118,6 @@ public class Player : MonoBehaviour
             float speedMultiplier = holdHeld && controller.collisions.below ? 0.6f : 1f;
             float targetXVelocity = inputX * movementSpeed * speedMultiplier;
             velocity.x = Mathf.SmoothDamp(velocity.x, targetXVelocity, ref velocityXSmoothing, controller.collisions.below ? accelerationTimeGrounded : accelerationTimeAirborne);
-        }
-        
-        //TODO: move this to spell controller for the self magic
-        if (Input.GetButtonDown("Dash")) {
-            StartCoroutine(Dash());
         }
 
         //Jumping
@@ -213,16 +204,5 @@ public class Player : MonoBehaviour
             yield return new WaitForSeconds(damageFlashInterval);
         }
         invincible = false;
-    }
-
-    IEnumerator Dash() {
-        trailRenderer.enabled = true;
-        float originalVelocityX = velocity.x;
-        velocity.x = originalVelocityX * 4;
-
-        yield return new WaitForSeconds(dashTime);
-        
-        velocity.x = originalVelocityX;
-        trailRenderer.enabled = false;
     }
 }
