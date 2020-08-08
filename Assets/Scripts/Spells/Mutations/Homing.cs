@@ -32,7 +32,7 @@ public class Homing : Mutation
         if (closestEnemy == null) {
             return;
         }
-        Debug.Log("Homing in on enemy " + closestEnemy + "!");
+        
         velocity += (directionToClosestEnemy.normalized * strength);
     }
 
