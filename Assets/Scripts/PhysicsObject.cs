@@ -19,7 +19,7 @@ public abstract class PhysicsObject : MonoBehaviour
     {
         //Prevent gravity accumulation
         if (controller.collisions.above || controller.collisions.below) {
-            velocity = Vector3.zero;
+            velocity.y = 0;
         }
         if (controller.collisions.left || controller.collisions.right) {
             velocity.x = 0;

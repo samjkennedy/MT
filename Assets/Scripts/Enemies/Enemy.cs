@@ -1,37 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 [RequireComponent (typeof (SpriteRenderer))]
-public class Enemy : PhysicsObject
+public abstract class Enemy : PhysicsObject
 {
 
     public int health;
 
-    private Color originalColour;
-    private SpriteRenderer sr; 
-
-    private Player player;
-
-    //Combat
-    private int damage = 1;//half a heart
-    private float attackSpeed = 1f; //once per second
-    private bool attackCooldown = false;
-
-    //TODO: Move all the movement code into concrete enemies
-    private float movementSpeed = 2f;
-    private float jumpHeight = 1.0f;
-    private float timeToJumpApex = 0.55f;
-    private float jumpFrequency = 2.5f;
-    private float gravity;
-    private float jumpVelocity;
-    private bool canJump = true;
+    public Player player;
 
     private float knockBack = 1f;
 
     //Particle effects, might be a better way of handling this down the line?
     public ParticleController particleControllerPrefab;
     private ParticleController particleController;
+
+    //Universal movement stuff
+    public float movementSpeed = 2f;
+
     //statuses - add more as need be
     public bool onFire;
     private bool burning;
@@ -40,25 +28,23 @@ public class Enemy : PhysicsObject
     public bool isPoisoned;
     private bool poisoned;
 
+    //Components & component paraphernalia
+    public SpriteRenderer spriteRenderer; 
+    private Color originalColour;
+
     public override void Start()
     {
         base.Start();
 
-        gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
-        jumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
-
-        sr = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         player = FindObjectOfType<Player>();
         particleController = Instantiate(particleControllerPrefab, transform);
-        originalColour = sr.color;
+        originalColour = spriteRenderer.color;
     }
 
     public override void Update()
     {
         base.Update();
-        if (canJump && controller.collisions.below) {
-            StartCoroutine(Jump());
-        }
 
         if (!burning && onFire) {
             StartCoroutine(Burn());
@@ -71,18 +57,16 @@ public class Enemy : PhysicsObject
         if (!poisoned && isPoisoned) {
             StartCoroutine(Poison());
         }
+    }
 
-        if (!attackCooldown && controller.collisions.any) {
-            RaycastHit2D hit = controller.collisions.hit;
-            if (hit.transform == player.transform) {
-                StartCoroutine(HitPlayer());
-            }
-        }
-
-        Move(velocity * Time.deltaTime + (0.5f * Vector3.up * gravity * Mathf.Pow(Time.deltaTime, 2)));
+    public virtual ElementType[] GetImmunities() {
+        return new ElementType[0];
     }
 
     public void Hit(Spell spell) {
+        if (ArrayUtility.Contains(GetImmunities(), spell.Element.GetElementType())) {
+            return;
+        }
         TakeDamage(spell.GetDamage());
         
         Hit(spell.Element);
@@ -91,23 +75,20 @@ public class Enemy : PhysicsObject
         AddVelocity(spell.Velocity.normalized * 3f + (Vector3.up)); //hard coding mass 
     }
 
+    //TODO different enemies will deal with statuses differently, maybe more flags? isImmuneToFire?
     public void Hit(Element element) {
         ElementType elementType = element.GetElementType();
         switch (elementType)
         {
             case ElementType.ARCANA:
-                Debug.Log("Nothing!");
                 break;
             case ElementType.FIRE:
-                Debug.Log("Burning!");
                 onFire = true;
                 break;
             case ElementType.CORRUPTION:
                 isPoisoned = true;
-                Debug.Log("Poison!");
                 break;
             case ElementType.FROST:
-                Debug.Log("Frost!");
                 if (!onFire) {
                     frozen = true;
                 }
@@ -121,7 +102,7 @@ public class Enemy : PhysicsObject
     void TakeDamage(float damage) {
         health -= (int) Mathf.Ceil(damage);
         if (health <= 0) {
-            Destroy(gameObject);
+            Destroy(gameObject); //TODO better deaths - animations?
         }
     }
 
@@ -177,27 +158,5 @@ public class Enemy : PhysicsObject
         particleController.StopEffect(ElementType.CORRUPTION);
         poisoned = false;
         isPoisoned = false;
-    }
-
-    public override float GetGravity() {
-        return gravity;
-    }
-
-    IEnumerator Jump() {
-        canJump = false;
-
-        velocity.y = jumpVelocity;
-        Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
-        velocity.x = directionToPlayer.x * movementSpeed;
-
-        yield return new WaitForSeconds(jumpFrequency);
-        canJump = true;
-    }
-
-    private IEnumerator HitPlayer() {
-        player.Hit(damage);
-        attackCooldown = true;
-        yield return new WaitForSeconds(attackSpeed);
-        attackCooldown = false;
     }
 }

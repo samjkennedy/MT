@@ -14,6 +14,9 @@ public class Spell : MonoBehaviour
     private Vector3 velocity;
     public Vector3 Velocity => velocity;
 
+    public float spellSpeedModifier;
+    public string hitTag;
+
     Controller2D controller;
 
     void Start()
@@ -27,28 +30,39 @@ public class Spell : MonoBehaviour
 
         if (controller.collisions.any) {
             RaycastHit2D hit = controller.collisions.hit;
-            if (hit.transform.tag == "Enemy") {
-                Enemy enemy = hit.collider.GetComponent<Enemy>();
-                enemy.Hit(this);
+            if (hit.transform.tag == hitTag) {
+                if (hitTag == "Enemy") {
+                    Enemy enemy = hit.collider.GetComponent<Enemy>();
+                    enemy.Hit(this);
+                } else if (hitTag == "Player") {
+                    Player player = hit.collider.GetComponent<Player>();
+                    player.Hit(1);
+                }
+                style.PerformHitAction(this);
+                if (mutation != null) {
+                    mutation.PerformAfterEffect(this);
+                }
+                Destroy(gameObject);
+            } else if (hit.transform.tag == "Obstacles") {
+                style.PerformHitAction(this);
+                if (mutation != null) {
+                    mutation.PerformAfterEffect(this);
+                }
+                Destroy(gameObject);
             }
-            style.PerformHitAction(this);
-            if (mutation != null) {
-                mutation.PerformAfterEffect(this);
-            }
-            Destroy(gameObject);
         }
     }
 
     public void Fire(Element elementPrefab, Style stylePrefab, Mutation mutationPrefab, Vector3 direction) {
         style = Instantiate(stylePrefab, transform);
         element = Instantiate(elementPrefab, transform);
+        this.hitTag = hitTag;
         if (mutationPrefab != null) {
             mutation = Instantiate(mutationPrefab, transform);
         }
 
         Destroy(gameObject, element.GetLifetime() * style.GetRangeModifier());
-        velocity = direction * element.GetSpeed() * style.GetSpeedModifier();
-        Debug.Log(element.GetSpeed() + ", " + style.GetSpeedModifier());
+        velocity = direction * element.GetSpeed() * style.GetSpeedModifier() * spellSpeedModifier;
     }
 
     void OnDisable() {
