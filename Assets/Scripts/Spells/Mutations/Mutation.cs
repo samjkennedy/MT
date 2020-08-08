@@ -4,5 +4,11 @@ using UnityEngine;
 
 public abstract class Mutation : MonoBehaviour
 {
-    public abstract void PerformAfterEffect(Spell spell);
+    public virtual void PerformAfterEffect(Spell spell) {
+        return;
+    }
+
+    public virtual void AlterPath(ref Vector3 velocity, float deltaTime) {
+        return;
+    }
 }

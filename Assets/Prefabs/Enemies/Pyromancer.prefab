@@ -151,5 +151,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   element: {fileID: 7275477902764418830, guid: 7ce9b74ba45df65478d744205cf138bc, type: 3}
   style: {fileID: 7501376577912088293, guid: dabc84a336f368c4f9e3be786560e7b1, type: 3}
+  mutation: {fileID: 2025493425677543242, guid: df7e7938496b2f6458bde19f99dcc89d,
+    type: 3}
   spellPrefab: {fileID: 5624689014181015181, guid: 80df61a47a37ea347a3c8b55e720b0d5,
     type: 3}
