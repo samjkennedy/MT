@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 [RequireComponent (typeof (SpriteRenderer))]
 public abstract class Enemy : PhysicsObject
@@ -28,17 +29,17 @@ public abstract class Enemy : PhysicsObject
     private bool poisoned;
 
     //Components & component paraphernalia
-    private SpriteRenderer sr; 
+    public SpriteRenderer spriteRenderer; 
     private Color originalColour;
 
     public override void Start()
     {
         base.Start();
 
-        sr = GetComponent<SpriteRenderer>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         player = FindObjectOfType<Player>();
         particleController = Instantiate(particleControllerPrefab, transform);
-        originalColour = sr.color;
+        originalColour = spriteRenderer.color;
     }
 
     public override void Update()
@@ -58,7 +59,14 @@ public abstract class Enemy : PhysicsObject
         }
     }
 
+    public virtual ElementType[] GetImmunities() {
+        return new ElementType[0];
+    }
+
     public void Hit(Spell spell) {
+        if (ArrayUtility.Contains(GetImmunities(), spell.Element.GetElementType())) {
+            return;
+        }
         TakeDamage(spell.GetDamage());
         
         Hit(spell.Element);
@@ -67,7 +75,7 @@ public abstract class Enemy : PhysicsObject
         AddVelocity(spell.Velocity.normalized * 3f + (Vector3.up)); //hard coding mass 
     }
 
-    //TODO different enemies will deal with statuses differently
+    //TODO different enemies will deal with statuses differently, maybe more flags? isImmuneToFire?
     public void Hit(Element element) {
         ElementType elementType = element.GetElementType();
         switch (elementType)
