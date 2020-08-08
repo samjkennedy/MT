@@ -48,7 +48,6 @@ public class Spell : MonoBehaviour
 
         Destroy(gameObject, element.GetLifetime() * style.GetRangeModifier());
         velocity = direction * element.GetSpeed() * style.GetSpeedModifier();
-        Debug.Log(element.GetSpeed() + ", " + style.GetSpeedModifier());
     }
 
     void OnDisable() {
