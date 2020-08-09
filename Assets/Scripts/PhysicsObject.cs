@@ -28,6 +28,10 @@ public abstract class PhysicsObject : MonoBehaviour
         controller.Move(velocity * Time.deltaTime + (0.5f * Vector3.up * GetGravity() * Mathf.Pow(Time.deltaTime, 2)));
     }
 
+    public Bounds GetBounds() {
+        return controller.GetCollider().bounds;
+    }
+
     public void Move(Vector3 motion) {
         controller.Move(motion * Time.deltaTime + (0.5f * Vector3.up * GetGravity() * Mathf.Pow(Time.deltaTime, 2)));
     }

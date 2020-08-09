@@ -95,7 +95,7 @@ public class ShootController : MonoBehaviour
         allowfire = false;
         Spell spell = Instantiate(selectedSpell, player.transform.position, Quaternion.identity);
         spell.Fire(selectedElement, selectedStyle, mutation, pipDirection);
-        yield return new WaitForSeconds(spell.Element.GetFireRate());
+        yield return new WaitForSeconds(spell.Element.GetFireRate() * spell.Style.GetFireRateModifier());
         allowfire = true;
     }
 

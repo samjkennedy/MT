@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Mutation : MonoBehaviour
 {
-    public virtual void PerformAfterEffect(Spell spell) {
+    public virtual void PerformAfterEffect(Spell spell, string hitTag) {
         return;
     }
 

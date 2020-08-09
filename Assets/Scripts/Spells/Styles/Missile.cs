@@ -10,6 +10,7 @@ public class Missile : Style
     private float speedModifier = 2f;
     private float damageModifier = 1f;
     private float rangeModifier = 1f;
+    private float fireRateModifier = 1f;
 
     void Awake() {
         sr = GetComponent<SpriteRenderer>();
@@ -35,11 +36,15 @@ public class Missile : Style
         return rangeModifier;
     }
 
+    public override float GetFireRateModifier() {
+        return fireRateModifier;
+    }
+
     public override void SetProjectileColour(Color colour) {
         sr.color = colour;
     }
 
     public override void PerformHitAction(Spell spell) {
-        return;
+        Destroy(spell);
     }
 }

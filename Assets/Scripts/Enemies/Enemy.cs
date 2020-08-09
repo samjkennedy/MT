@@ -63,7 +63,7 @@ public abstract class Enemy : PhysicsObject
         return new ElementType[0];
     }
 
-    public void Hit(Spell spell) {
+    public virtual void Hit(Spell spell) {
         if (ArrayUtility.Contains(GetImmunities(), spell.Element.GetElementType())) {
             return;
         }
@@ -72,7 +72,8 @@ public abstract class Enemy : PhysicsObject
         Hit(spell.Element);
 
         //Knockback
-        AddVelocity(spell.Velocity.normalized * 3f + (Vector3.up)); //hard coding mass 
+        //TODO reenable when the spell style confers momentum too
+        //AddVelocity(spell.Velocity.normalized * 3f + (Vector3.up)); //hard coding mass 
     }
 
     //TODO different enemies will deal with statuses differently, maybe more flags? isImmuneToFire?
