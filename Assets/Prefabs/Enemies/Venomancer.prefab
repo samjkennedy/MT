@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4825633048388714537}
   - component: {fileID: 4825633048388714536}
   - component: {fileID: 4825633048388714517}
+  - component: {fileID: -3141816423767739268}
   m_Layer: 10
   m_Name: Venomancer
   m_TagString: Enemy
@@ -94,7 +95,7 @@ BoxCollider2D:
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_UsedByEffector: 0
+  m_UsedByEffector: 1
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
@@ -123,7 +124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   collisionMask:
     serializedVersion: 2
-    m_Bits: 768
+    m_Bits: 1792
   horizontalRayCount: 4
   verticalRayCount: 4
 --- !u!114 &4825633048388714517
@@ -155,3 +156,23 @@ MonoBehaviour:
     type: 3}
   spellPrefab: {fileID: 5624689014181015181, guid: 80df61a47a37ea347a3c8b55e720b0d5,
     type: 3}
+--- !u!250 &-3141816423767739268
+PointEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4825633048388714516}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 1024
+  m_ForceMagnitude: -10
+  m_ForceVariation: 0
+  m_DistanceScale: 5
+  m_ForceSource: 1
+  m_ForceTarget: 1
+  m_ForceMode: 2
+  m_Drag: 0
+  m_AngularDrag: 0

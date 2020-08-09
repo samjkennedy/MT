@@ -43,6 +43,10 @@ public class Controller2D : MonoBehaviour
         transform.Translate(velocity);
     }
 
+    public BoxCollider2D GetCollider() {
+        return collider;
+    }
+
     void HorizontalCollisions(ref Vector3 velocity) {
         float directionX = collisions.faceDirection; //left = -1, right = 1
         float rayLength = Mathf.Abs(velocity.x) + skinWidth;

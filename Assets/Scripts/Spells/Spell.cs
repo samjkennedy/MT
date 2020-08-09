@@ -42,17 +42,15 @@ public class Spell : MonoBehaviour
                     Player player = hit.collider.GetComponent<Player>();
                     player.Hit(1);
                 }
-                style.PerformHitAction(this);
                 if (mutation != null) {
-                    mutation.PerformAfterEffect(this);
+                    mutation.PerformAfterEffect(this, hitTag);
                 }
-                Destroy(gameObject);
+                style.PerformHitAction(this);
             } else if (hit.transform.tag == "Obstacles") {
-                style.PerformHitAction(this);
                 if (mutation != null) {
-                    mutation.PerformAfterEffect(this);
+                    mutation.PerformAfterEffect(this, hitTag);
                 }
-                Destroy(gameObject);
+                style.PerformHitAction(this);
             }
         }
     }
@@ -74,7 +72,7 @@ public class Spell : MonoBehaviour
         style.PerformHitAction(this);
         if (mutation != null) {
             mutation.transform.parent = null;
-            mutation.PerformAfterEffect(this);
+            mutation.PerformAfterEffect(this, hitTag);
         }
         Destroy(element.gameObject, element.GetLifetime());
     }

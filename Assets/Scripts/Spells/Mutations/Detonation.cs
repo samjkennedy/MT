@@ -5,7 +5,6 @@ using UnityEngine;
 public class Detonation : Mutation
 {
 
-    //Definitely replace with a generic particle controller
     public ParticleController particleControllerPrefab;
     private ParticleController particleController;
     private float duration = 1.5f;
@@ -16,13 +15,13 @@ public class Detonation : Mutation
         particleController = Instantiate(particleControllerPrefab, transform);
     }
 
-    public override void PerformAfterEffect(Spell spell) {
+    public override void PerformAfterEffect(Spell spell, string hitTag) {
         particleController.PlayExplosion(spell.Element.GetElementType());
 
         Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, radius);
         foreach (var hitCollider in hitColliders)
         {
-            if (hitCollider.tag == "Enemy") {
+            if (hitCollider.tag == hitTag) {
                 Enemy enemy = hitCollider.GetComponent<Enemy>();
                 enemy.Hit(spell);
             }

@@ -8,6 +8,7 @@ public abstract class Style : MonoBehaviour
     public abstract float GetSpeedModifier();
     public abstract float GetDamageModifier();
     public abstract float GetRangeModifier();
+    public abstract float GetFireRateModifier();
 
     public abstract StyleType GetType();
 

@@ -47,6 +47,9 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //Dirty hack, maybe fix me
+        DontDestroyOnLoad(gameObject);
+
         controller = GetComponent<Controller2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 

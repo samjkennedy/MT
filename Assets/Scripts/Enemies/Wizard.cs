@@ -10,7 +10,7 @@ public class Wizard : Enemy
     public Mutation mutation;
     public Spell spellPrefab;
     private Spell spell;
-    private float attackSpeed = 3f; //Once every 3 seconds
+    private float attackSpeed = 1.5f;
     private bool attackCooldown = false;
 
     //Movement
@@ -35,14 +35,16 @@ public class Wizard : Enemy
     void Update()
     {
         base.Update();
-        Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
+        Vector3 vectorToPlayer = player.transform.position - transform.position;
+        Vector3 directionToPlayer = vectorToPlayer.normalized;
 
         if (!attackCooldown) {
             StartCoroutine(FireSpell(directionToPlayer));
         }
 
         //Move towards player
-        velocity.x = directionToPlayer.x * movementSpeed;
+        bool tooClose = vectorToPlayer.magnitude <= 5f;
+        velocity.x = tooClose ? 0f : directionToPlayer.x * movementSpeed;
 
         if (velocity.x > 0 && spriteRenderer.flipX) {
             spriteRenderer.flipX = false;

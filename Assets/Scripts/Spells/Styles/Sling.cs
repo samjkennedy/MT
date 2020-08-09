@@ -16,6 +16,7 @@ public class Sling : Style
     private float speedModifier = 1f;
     private float damageModifier = 1.5f;
     private float rangeModifier = 2f;
+    private float fireRateModifier = 3f;
 
     public Detonation detonationPrefab;
     private Detonation detonation;
@@ -45,13 +46,17 @@ public class Sling : Style
         return rangeModifier;
     }
 
+    public override float GetFireRateModifier() {
+        return fireRateModifier;
+    }
+
     public override void SetProjectileColour(Color colour) {
         sr.color = colour;
     }
 
     public override void PerformHitAction(Spell spell) {
         detonation = Instantiate(detonationPrefab, transform.position, Quaternion.identity);
-        detonation.PerformAfterEffect(spell);
-        return;
+        detonation.PerformAfterEffect(spell, spell.hitTag);
+        Destroy(spell);
     }
 }
