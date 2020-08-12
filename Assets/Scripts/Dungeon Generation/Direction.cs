@@ -2,7 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Door : MonoBehaviour
+public enum Direction
 {
-    public Direction direction;
+    ABOVE,
+    BELOW,
+    LEFT,
+    RIGHT,
+    NONE
 }

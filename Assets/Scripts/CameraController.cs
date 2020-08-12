@@ -10,7 +10,6 @@ public class CameraController : MonoBehaviour
     private Room currentRoom;
     
     public float roomChangeSpeed;
-    private float timeSpentChangingScene;
     public bool changingScenes;
 
     public Transform transformToFollow;
@@ -57,9 +56,9 @@ public class CameraController : MonoBehaviour
     }
 
     public void SetRoom(Room room) {
+        Debug.Log("Room is now " + room);
         changingScenes = true;
         currentRoom = room;
-        timeSpentChangingScene = roomChangeSpeed;
     }
 
     //Not actually needed below here
