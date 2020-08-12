@@ -44,7 +44,8 @@ public class Wizard : Enemy
 
         //Move towards player
         bool tooClose = vectorToPlayer.magnitude <= 5f;
-        velocity.x = tooClose ? 0f : directionToPlayer.x * movementSpeed;
+
+        //velocity.x = tooClose ? 0f : directionToPlayer.x * movementSpeed;
 
         if (velocity.x > 0 && spriteRenderer.flipX) {
             spriteRenderer.flipX = false;

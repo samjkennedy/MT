@@ -15,6 +15,8 @@ public class Room : MonoBehaviour
     public int x;
     public int y;
 
+    public List<Door> doors;
+
     public Vector3 topLeft;
     public Vector3 bottomRight;
 
@@ -26,7 +28,7 @@ public class Room : MonoBehaviour
             return;
         }
 
-        RoomController.instance.RegisterRoom(this);
+        //RoomController.instance.RegisterRoom(this);
     }
 
     void OnDrawGizmos() {

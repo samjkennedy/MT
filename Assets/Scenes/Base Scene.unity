@@ -252,12 +252,33 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 202177361}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eeb3f93ccfa306c4481a60f2cfe71e14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loadedRooms: []
+  leftRooms:
+  - {fileID: 1558663519527631991, guid: 3cb7f8f764dcd0244a0afe86139a7906, type: 3}
+  - {fileID: 1558663519527631991, guid: 0b8f86f38a9d9414fa816cf55080e2e3, type: 3}
+  - {fileID: 1558663519527631991, guid: 6d07ec152b8bdb14ea286ebbb4493895, type: 3}
+  - {fileID: 1558663519527631991, guid: 3c04dd12e32dfd445ae0e742de7155e7, type: 3}
+  rightRooms:
+  - {fileID: 1558663519527631991, guid: 3cb7f8f764dcd0244a0afe86139a7906, type: 3}
+  - {fileID: 1558663519527631991, guid: 0b8f86f38a9d9414fa816cf55080e2e3, type: 3}
+  - {fileID: 1558663519527631991, guid: 6d07ec152b8bdb14ea286ebbb4493895, type: 3}
+  - {fileID: 1558663519527631991, guid: ca3b31cff67c3f24e8fb660571e0858d, type: 3}
+  topRooms:
+  - {fileID: 1558663519527631991, guid: 3c04dd12e32dfd445ae0e742de7155e7, type: 3}
+  bottomRooms:
+  - {fileID: 1558663519527631991, guid: ca3b31cff67c3f24e8fb660571e0858d, type: 3}
+  terminalLeftRooms:
+  - {fileID: 1558663519527631991, guid: 0e5a21a757c61a74bb2f4f6461281828, type: 3}
+  terminalRightRooms:
+  - {fileID: 1558663519527631991, guid: 5c4fb620a7b4da9409b98ad17ec9dc3b, type: 3}
+  terminalTopRooms:
+  - {fileID: 1558663519527631991, guid: 8eb66f84acb57be4097cf2aeec1a0218, type: 3}
+  terminalBottomRooms:
+  - {fileID: 1558663519527631991, guid: a62977dff2257b44f9f4f52257004da8, type: 3}
 --- !u!4 &202177363
 Transform:
   m_ObjectHideFlags: 0
@@ -610,7 +631,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e0153d49cceb0f428dba8a7783f72d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomChangeSpeed: 100
+  roomChangeSpeed: 50
   changingScenes: 0
   transformToFollow: {fileID: 412114639}
 --- !u!81 &420713020
@@ -648,7 +669,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 3.5
+  orthographic size: 3.75
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1268,6 +1289,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a5e4186a9bcddb40a1abf78d0ef1c0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2060823575
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2060823577}
+  - component: {fileID: 2060823576}
+  m_Layer: 0
+  m_Name: DungeonGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2060823576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2060823575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41af879e2d4294447bd5093a2cb19512, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dungeonSize: 20
+  unconnectedDoors: []
+  startingRoomPrefab: {fileID: 4933688642611784706, guid: 7378434d23b61044080e9dfd9a8a8e39,
+    type: 3}
+--- !u!4 &2060823577
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2060823575}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2136564459
 GameObject:
   m_ObjectHideFlags: 0
