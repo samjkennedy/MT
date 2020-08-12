@@ -13,6 +13,8 @@ public class ParticleController : MonoBehaviour
     private ParticleSystem corruptionExplosionParticles;
     private ParticleSystem frostEffectParticles;
     private ParticleSystem frostExplosionParticles;
+    private ParticleSystem waterEffectParticles;
+    private ParticleSystem waterExplosionParticles;
 
     void Awake()
     {
@@ -24,6 +26,8 @@ public class ParticleController : MonoBehaviour
         corruptionExplosionParticles = transform.Find("Corruption Explosion Particles").gameObject.GetComponent<ParticleSystem>();
         frostEffectParticles = transform.Find("Frost Effect Particles").gameObject.GetComponent<ParticleSystem>();
         frostExplosionParticles = transform.Find("Frost Explosion Particles").gameObject.GetComponent<ParticleSystem>();
+        waterEffectParticles = transform.Find("Water Effect Particles").gameObject.GetComponent<ParticleSystem>();
+        waterExplosionParticles = transform.Find("Water Explosion Particles").gameObject.GetComponent<ParticleSystem>();
     }
 
     public void PlayEffect(ElementType elementType) {
@@ -40,6 +44,10 @@ public class ParticleController : MonoBehaviour
                 break;
             case ElementType.FROST:
                 frostEffectParticles.Play();
+                break;
+            case ElementType.WATER:
+                Debug.Log("Glub glub blub");
+                waterEffectParticles.Play();
                 break;
             default:
                 Debug.Log("Unknown element: " + elementType);
@@ -62,6 +70,9 @@ public class ParticleController : MonoBehaviour
             case ElementType.FROST:
                 frostExplosionParticles.Play();
                 break;
+            case ElementType.WATER:
+                waterExplosionParticles.Play();
+                break;
             default:
                 Debug.Log("Unknown element: " + elementType);
                 break;
@@ -82,6 +93,9 @@ public class ParticleController : MonoBehaviour
                 break;
             case ElementType.FROST:
                 frostEffectParticles.Stop();
+                break;
+            case ElementType.WATER:
+                waterEffectParticles.Stop();
                 break;
             default:
                 Debug.Log("Unknown element: " + elementType);
