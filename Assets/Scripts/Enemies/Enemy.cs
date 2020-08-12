@@ -27,6 +27,8 @@ public abstract class Enemy : PhysicsObject
     private bool slow;
     public bool isPoisoned;
     private bool poisoned;
+    public bool wet;
+    private bool isWet;
 
     //Components & component paraphernalia
     public SpriteRenderer spriteRenderer; 
@@ -37,7 +39,8 @@ public abstract class Enemy : PhysicsObject
         base.Start();
 
         spriteRenderer = GetComponent<SpriteRenderer>();
-        player = FindObjectOfType<Player>();
+        GameObject playerGameObj = GameObject.Find("Player");
+        player = playerGameObj.GetComponent<Player>();
         particleController = Instantiate(particleControllerPrefab, transform);
         originalColour = spriteRenderer.color;
     }
@@ -56,6 +59,10 @@ public abstract class Enemy : PhysicsObject
 
         if (!poisoned && isPoisoned) {
             StartCoroutine(Poison());
+        }
+
+        if (!isWet && wet) {
+            StartCoroutine(Damp());
         }
     }
 
@@ -84,7 +91,9 @@ public abstract class Enemy : PhysicsObject
             case ElementType.ARCANA:
                 break;
             case ElementType.FIRE:
-                onFire = true;
+                if (!wet) {
+                    onFire = true;
+                }
                 break;
             case ElementType.CORRUPTION:
                 isPoisoned = true;
@@ -93,6 +102,10 @@ public abstract class Enemy : PhysicsObject
                 if (!onFire) {
                     frozen = true;
                 }
+                break;
+            case ElementType.WATER:
+                onFire = false;
+                wet = true;
                 break;
             default:
                 Debug.Log(elementType);
@@ -123,6 +136,25 @@ public abstract class Enemy : PhysicsObject
         particleController.StopEffect(ElementType.FIRE);
         onFire = false;
         burning = false;
+    }
+
+    IEnumerator Damp() {
+        burning = false;
+        particleController.PlayEffect(ElementType.WATER);
+        float originalMovementSpeed = movementSpeed;
+        movementSpeed = movementSpeed/2f;
+        //TODO: make configurable
+        for (int i = 0; i < 10; i++) 
+        {
+            yield return new WaitForSeconds(0.5f);
+            if (!wet) {
+                break;
+            }
+        } 
+        particleController.StopEffect(ElementType.WATER);
+        wet = false;
+        isWet = false;
+        movementSpeed = originalMovementSpeed;
     }
 
     IEnumerator Freeze() {

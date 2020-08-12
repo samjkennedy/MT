@@ -1,18 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Door : MonoBehaviour
 {
-    public string sceneToLoadName;
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+    }
 
-    public Vector3 spawnLocation;
-
-    void OnTriggerEnter2D(Collider2D other) {
-        if (other.CompareTag("Player")) {
-            SceneManager.LoadSceneAsync(sceneToLoadName);
-            other.gameObject.transform.position = spawnLocation;
-        }
+    // Update is called once per frame
+    void Update()
+    {
+        
     }
 }

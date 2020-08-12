@@ -6,7 +6,8 @@ public enum ElementType
 {
     ARCANA,
     FIRE,
-    FROST,
     EARTH,
+    FROST,
+    WATER,
     CORRUPTION,
 }
