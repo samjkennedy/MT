@@ -9,19 +9,124 @@ public class DungeonGenerator : MonoBehaviour
     public int minDungeonSize;
     public int maxDungeonSize;
 
+    //Grid space
+    public int maxWidth;
+    public int maxHeight;
+
+    private int tilesInGridX = 16;
+    private int tilesInGridY = 10;
+
     public List<Opening> unconnectedOpenings;
     public Room startingRoomPrefab;
 
     public float buildSpeed;
 
+    private RoomData[,] grid;
+
     private List<Room> terminalRooms = new List<Room>(); //TODO: later swap them out for special rooms?
 
     public void Start() {
-        Room startingRoom = Instantiate(startingRoomPrefab, Vector3.zero, Quaternion.identity, transform);
+        grid = new RoomData[maxWidth, maxHeight];
+
+        int x = maxWidth / 2;
+        int y = maxHeight / 2;
+
+        Vector3 spawnPoint = new Vector3(tilesInGridX * x, tilesInGridY * y, 0);
+        Room startingRoom = Instantiate(startingRoomPrefab, spawnPoint, Quaternion.identity, transform);
+
+        RoomData roomData = new RoomData();
+        roomData.position = startingRoom.transform.position;
+        roomData.width = startingRoom.width / tilesInGridX;
+        roomData.height = startingRoom.height / tilesInGridY;
+
+        List<OpeningData> openingData = new List<OpeningData>();
+        foreach (Opening opening in startingRoom.openings) {
+            OpeningData openingDatum = new OpeningData();
+            openingDatum.x = x;
+            openingDatum.y = y;
+            openingDatum.direction = opening.direction;
+            openingData.Add(openingDatum);
+        }
+        roomData.openingData = openingData;
+
+        grid[x, y] = roomData;
+
+        // Debug.Log(x + ", " +y);
+        // Debug.Log(grid[x, y].width + ", " + grid[x, y].width);
+
+        // foreach (OpeningData openingDatum in grid[x, y].openingData) {
+        //     Debug.Log(openingDatum.x + ", " + openingDatum.y);
+        //     Debug.Log(openingDatum.direction);
+        // }
+
         CameraController.instance.SetRoom(startingRoom);
         unconnectedOpenings = startingRoom.openings;
 
-        StartCoroutine(BuildLevel());
+        //StartCoroutine(BuildLevel());
+        StartCoroutine(BuildLevelWithGrid(roomData));
+    }
+
+    public Queue<OpeningData> openings;
+
+    IEnumerator BuildLevelWithGrid(RoomData spawnRoom) {
+        int dungeonSize = Random.Range(minDungeonSize, maxDungeonSize);
+        Debug.Log(dungeonSize);
+
+        openings = new Queue<OpeningData>();
+        foreach (OpeningData openingDatum in spawnRoom.openingData) {
+            openings.Enqueue(openingDatum);
+        }
+        
+        int roomsAdded = 0;
+        while (openings.Count > 0 && roomsAdded + openings.Count < dungeonSize) {
+            Debug.Log(openings.Count);
+            OpeningData opening = openings.Dequeue();
+
+            Debug.Log(opening.direction);
+
+            Room roomToSpawn = GetRoomToSpawn(opening.direction);
+            //Guarantee a 1x1 room for now, because non 1x1 rooms are hard
+            while(roomToSpawn.width / tilesInGridX > 1 || roomToSpawn.height / tilesInGridY > 1) {
+                roomToSpawn = GetRoomToSpawn(opening.direction);
+            }
+
+            Debug.Log(roomToSpawn);
+
+            Opening openingToConnect = roomToSpawn.openings.Find(o => o.direction == OppositeTo(opening.direction)); 
+            if (openingToConnect == null) {
+                Debug.Log("You got a room without a valid Opening!");
+                continue;
+            }
+
+            Vector3 vecForDir = GetVecForDir(opening.direction);
+            Vector3 spawnPoint = Vector3.Scale(new Vector3(tilesInGridX, tilesInGridY, 0), vecForDir + new Vector3(opening.x, opening.y, 0));
+            Room spawnedRoom = Instantiate(roomToSpawn, spawnPoint, Quaternion.identity, transform);
+
+            RoomData roomData = new RoomData();
+            roomData.position = spawnPoint;
+            roomData.width = spawnedRoom.width / tilesInGridX;
+            roomData.height = spawnedRoom.height / tilesInGridY;
+
+            List<OpeningData> openingData = new List<OpeningData>();
+
+            foreach (Opening spawnedOpening in spawnedRoom.openings) {
+                    OpeningData openingDatum = new OpeningData();
+                    openingDatum.x = opening.x + (int)vecForDir.x;
+                    openingDatum.y = opening.y + (int)vecForDir.y;
+                    openingDatum.direction = spawnedOpening.direction;
+
+                    openingData.Add(openingDatum);
+                if (spawnedOpening.transform.localPosition != openingToConnect.transform.position) {
+                    openings.Enqueue(openingDatum);
+                }
+            }
+            roomData.openingData = openingData;
+            grid[opening.x + (int)vecForDir.x, opening.y + (int)vecForDir.y] = roomData;
+
+            roomsAdded++;
+
+            yield return new WaitForSeconds(buildSpeed);
+        }
     }
 
     IEnumerator BuildLevel() {
@@ -105,6 +210,23 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
+    private Vector3 GetVecForDir(Direction direction) {
+
+        switch (direction) {
+            case Direction.ABOVE:
+                return new Vector3(0, 1, 0);
+            case Direction.BELOW:
+                return new Vector3(0, -1, 0);
+            case Direction.RIGHT:
+                return new Vector3(1, 0, 0);
+            case Direction.LEFT:
+                return new Vector3(-1, 0, 0);
+            default:
+                Debug.Log("Unknown direction " + direction);
+                return Vector3.zero;
+        }
+    }
+
     private Room GetTerminalRoomToSpawn(Direction direction) {
 
         switch (direction) {
@@ -137,6 +259,22 @@ public class DungeonGenerator : MonoBehaviour
                 Debug.Log("Unknown direction " + direction);
                 return Direction.NONE;
         }
+    }
+
+    public struct RoomData {
+        //In game world
+        public Vector3 position;
+        //In grid units
+        public int width;
+        public int height;
+
+        public List<OpeningData> openingData;
+    }
+
+    public struct OpeningData {
+        public int x;
+        public int y;
+        public Direction direction;
     }
 
 }
