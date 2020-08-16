@@ -21,6 +21,9 @@ public class Homing : Mutation
         {
             if (hitCollider.tag == "Enemy") {
                 Enemy enemy = hitCollider.GetComponent<Enemy>();
+                if (!enemy.IsKillable()) {
+                    continue;
+                }
                 Vector3 vectorToEnemy = (enemy.transform.position - transform.position);
 
                 if (vectorToEnemy.magnitude < directionToClosestEnemy.magnitude) {

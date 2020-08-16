@@ -21,6 +21,10 @@ public class Wizard : Enemy
     private float jumpVelocity;
     private bool canJump = true;
 
+    void OnEnable() {
+        StartCoroutine(ChargeAttack());
+    }
+ 
     void Start()
     {
         base.Start();
@@ -54,8 +58,9 @@ public class Wizard : Enemy
             spriteRenderer.flipX = true;
         }
 
-        if (canJump && Random.Range(0f, 1f) > 0.975f) {
-            StartCoroutine(Jump());
+        RaycastHit2D rc2d = Physics2D.Raycast(transform.position, Vector2.down + (Vector2.right * Mathf.Sign(directionToPlayer.x)), 2f);
+        if (!rc2d) {
+            velocity.x = 0;
         }
 
         Move(velocity * Time.deltaTime + (0.5f * Vector3.up * gravity * Mathf.Pow(Time.deltaTime, 2)));

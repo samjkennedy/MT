@@ -9,7 +9,7 @@ public class RoomController : MonoBehaviour
 
     // string currentFloorName = "First Floor";
     // RoomInfo currentLoadRoomData;
-    // Room currentRoom;
+    public Room currentRoom;
 
     // Queue<RoomInfo> loadRoomQueue = new Queue<RoomInfo>();
 
@@ -100,7 +100,7 @@ public class RoomController : MonoBehaviour
 
     public void OnPlayerEnterRoom(Room room) {
         CameraController.instance.SetRoom(room);
-        //currentRoom = room;
+        currentRoom = room;
     }
 
     // struct RoomInfo {

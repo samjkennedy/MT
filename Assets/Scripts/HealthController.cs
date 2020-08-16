@@ -6,6 +6,8 @@ using UnityEngine.UI;
 public class HealthController : MonoBehaviour
 {
 
+    public static HealthController instance;
+
     //health is an int to allow discrete changes to health (1 heart, 2 hearts etc)
     //NB 1 health = half a heart, 2 health = one whole heart
     public int maxHeartContainers = 10; 
@@ -17,7 +19,10 @@ public class HealthController : MonoBehaviour
     public Sprite halfHeart;
     public Sprite emptyHeart;
 
-    // Start is called before the first frame update
+    void Awake() {
+        instance = this;
+    }
+
     void Start()
     {
         UpdateHearts();
@@ -29,6 +34,10 @@ public class HealthController : MonoBehaviour
 
     public int GetCurrentHealth() {
         return currentHealth;
+    }
+
+    public bool AtFullHealth() {
+        return currentHealth == maxHealth;
     }
 
     public void Decrease(int decrease) {

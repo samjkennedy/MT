@@ -6,57 +6,82 @@ using UnityEngine.SceneManagement;
 public class DungeonGenerator : MonoBehaviour
 {
     
-    public int dungeonSize = 5;
+    public int minDungeonSize;
+    public int maxDungeonSize;
 
-    public List<Door> unconnectedDoors;
+    public List<Opening> unconnectedOpenings;
     public Room startingRoomPrefab;
+
+    public float buildSpeed;
 
     private List<Room> terminalRooms = new List<Room>(); //TODO: later swap them out for special rooms?
 
     public void Start() {
         Room startingRoom = Instantiate(startingRoomPrefab, Vector3.zero, Quaternion.identity, transform);
         CameraController.instance.SetRoom(startingRoom);
-        unconnectedDoors = startingRoom.doors;
+        unconnectedOpenings = startingRoom.openings;
 
+        StartCoroutine(BuildLevel());
+    }
+
+    IEnumerator BuildLevel() {
+        int dungeonSize = Random.Range(minDungeonSize, maxDungeonSize);
         int roomsAdded = 0;
-        while (unconnectedDoors.Count > 0 && roomsAdded + unconnectedDoors.Count < dungeonSize) {
-            //Get a random door
-            Door door = unconnectedDoors[Random.Range(0, unconnectedDoors.Count)];
-            //Get a suitable room to spawn from that door
-            Room roomToSpawn = GetRoomToSpawn(door.direction);
-            //Calculate its position relative to the two doors
-            Door doorToConnect = roomToSpawn.doors.Find(d => d.direction == OppositeTo(door.direction)); 
-            if (doorToConnect == null) {
-                Debug.Log("You got a room without a valid door!");
-                return;
+        int loops = 0;
+        while (unconnectedOpenings.Count > 0 && roomsAdded + unconnectedOpenings.Count < dungeonSize) {
+            loops++;
+            Debug.Log("Loop " + loops);
+            //Get a random Opening
+            Opening opening = unconnectedOpenings[Random.Range(0, unconnectedOpenings.Count)];
+            //Get a suitable room to spawn from that Opening
+            Room roomToSpawn = GetRoomToSpawn(opening.direction);
+            //Calculate its position relative to the two Openings
+            Opening openingToConnect = roomToSpawn.openings.Find(o => o.direction == OppositeTo(opening.direction)); 
+            if (openingToConnect == null) {
+                Debug.Log("You got a room without a valid Opening!");
+                continue;
             }
-            Vector3 spawnPoint = door.transform.position - doorToConnect.transform.position;
+            Vector3 spawnPoint = opening.transform.position - openingToConnect.transform.position;
             //does it intersect an existing room?
             //spawn it in at the calculated position
             Room spawnedRoom = Instantiate(roomToSpawn, spawnPoint, Quaternion.identity, transform);
+
+            yield return new WaitForSeconds(buildSpeed);
+            
+            if (spawnedRoom.isColliding) {
+                Destroy(spawnedRoom.gameObject);
+                yield return new WaitForSeconds(buildSpeed);
+                continue;
+            }
             //does it form a connection with an existing room?
-            //connect up any doors that are now connected (remove from @unconnectedDoors)
-            unconnectedDoors.Remove(door);
-            //add any new unconnected doors to the list
-            foreach (Door spawnedDoor in spawnedRoom.doors) {
-                if (spawnedDoor.transform.localPosition != doorToConnect.transform.position) {
-                    unconnectedDoors.Add(spawnedDoor);
+            //connect up any Openings that are now connected (remove from @unconnectedOpenings)
+            unconnectedOpenings.Remove(opening);
+            //add any new unconnected Openings to the list
+            foreach (Opening spawnedOpening in spawnedRoom.openings) {
+                if (spawnedOpening.transform.localPosition != openingToConnect.transform.position) {
+                    unconnectedOpenings.Add(spawnedOpening);
                 }
             }
             roomsAdded++;
         }
 
-        foreach (Door door in unconnectedDoors) {
+        foreach (Opening opening in unconnectedOpenings) {
             //Get a terminal 
-            Room roomToSpawn = GetTerminalRoomToSpawn(door.direction);
+            Room roomToSpawn = GetTerminalRoomToSpawn(opening.direction);
             //Spawn in right pos
-            Door doorToConnect = roomToSpawn.doors.Find(d => d.direction == OppositeTo(door.direction)); 
-            if (doorToConnect == null) {
-                Debug.Log("You got a room without a valid door!");
-                return;
+            Opening openingToConnect = roomToSpawn.openings.Find(o => o.direction == OppositeTo(opening.direction)); 
+            if (openingToConnect == null) {
+                Debug.Log("You got a room without a valid Opening!");
+                continue;
             }
-            Vector3 spawnPoint = door.transform.position - doorToConnect.transform.position;
+            Vector3 spawnPoint = opening.transform.position - openingToConnect.transform.position;
             Room spawnedRoom = Instantiate(roomToSpawn, spawnPoint, Quaternion.identity, transform);
+            yield return new WaitForSeconds(buildSpeed);
+            if (spawnedRoom.isColliding) {
+                Destroy(spawnedRoom.gameObject);
+                yield return new WaitForSeconds(buildSpeed);
+                continue;
+            }
             //Add to terminalRooms
             terminalRooms.Add(spawnedRoom);
             //Don't modify collection - no need

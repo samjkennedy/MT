@@ -2,12 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using TMPro;
 
 [RequireComponent (typeof (SpriteRenderer))]
 public abstract class Enemy : PhysicsObject
 {
 
+    public GameObject floatingTextPrefab;
     public int health;
+
+    public Vector3 spawnPosition;
 
     public Player player;
 
@@ -39,6 +43,7 @@ public abstract class Enemy : PhysicsObject
         base.Start();
 
         spriteRenderer = GetComponent<SpriteRenderer>();
+        spawnPosition = transform.position;
         GameObject playerGameObj = GameObject.Find("Player");
         player = playerGameObj.GetComponent<Player>();
         particleController = Instantiate(particleControllerPrefab, transform);
@@ -72,6 +77,7 @@ public abstract class Enemy : PhysicsObject
 
     public virtual void Hit(Spell spell) {
         if (ArrayUtility.Contains(GetImmunities(), spell.Element.GetElementType())) {
+            TakeDamage(spell.GetDamage() / 2f);
             return;
         }
         TakeDamage(spell.GetDamage());
@@ -81,6 +87,10 @@ public abstract class Enemy : PhysicsObject
         //Knockback
         //TODO reenable when the spell style confers momentum too
         //AddVelocity(spell.Velocity.normalized * 3f + (Vector3.up)); //hard coding mass 
+    }
+
+    public virtual bool IsKillable() {
+        return true;
     }
 
     //TODO different enemies will deal with statuses differently, maybe more flags? isImmuneToFire?
@@ -113,11 +123,40 @@ public abstract class Enemy : PhysicsObject
         }
     }
 
-    void TakeDamage(float damage) {
-        health -= (int) Mathf.Ceil(damage);
-        if (health <= 0) {
-            Destroy(gameObject); //TODO better deaths - animations?
+    public void TakeDamage(float damage) {
+        int damageDealt = (int) Mathf.Ceil(damage);
+        if (damageDealt <= 0) {
+            return;
         }
+        ShowDamagePopup(damageDealt);
+        health -= damageDealt;
+        if (health <= 0) {
+            Die(); //TODO better deaths - animations?
+        }
+    }
+
+    public virtual void Die() {
+        //Drop loot
+        if (Random.Range(0, 15) > 13) {
+            HealthPotion healthPotion = Instantiate(LootController.instance.healthPotionPrefab, transform.position, Quaternion.identity, transform.parent);
+            Vector3 potionVelocity = Random.insideUnitSphere;
+            healthPotion.velocity = new Vector3(potionVelocity.x, Mathf.Abs(potionVelocity.y) + 1, 0) * 3f;
+        }
+        for (int i = 0; i < Random.Range(0, 15); i++)
+        {
+            Coin coin = Instantiate(LootController.instance.coinPrefab, transform.position, Quaternion.identity, transform.parent);
+            Vector3 coinVelocity = Random.insideUnitSphere;
+            coin.velocity = new Vector3(coinVelocity.x, Mathf.Abs(coinVelocity.y) + 1, 0) * 3f;
+        }
+        Destroy(gameObject); //TODO better deaths - animations?
+    }
+
+    private void ShowDamagePopup(int damage) {
+        if (floatingTextPrefab == null) {
+            return;
+        }
+        GameObject floatingText = Instantiate(floatingTextPrefab, transform.position, Quaternion.identity, transform);
+        floatingText.GetComponent<TextMeshPro>().text = "-" + damage.ToString() + "HP";
     }
 
     IEnumerator Burn() {

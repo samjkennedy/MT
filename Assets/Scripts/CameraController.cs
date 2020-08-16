@@ -11,11 +11,17 @@ public class CameraController : MonoBehaviour
     
     public float roomChangeSpeed;
     public bool changingScenes;
+    public bool shaking;
+
+    public float sizeDivider;
 
     public Transform transformToFollow;
 
     float halfHeight;
     float halfWidth;
+
+    float smoothTime = 0.3f;
+    float zoomVelocity = 0.0f;
 
     void Awake() {
 
@@ -35,6 +41,10 @@ public class CameraController : MonoBehaviour
             return;
         }
 
+        Camera.main.orthographicSize = Mathf.SmoothDamp(Camera.main.orthographicSize, Mathf.Clamp(Mathf.Abs(currentRoom.bottomRight.y - currentRoom.topLeft.y) / sizeDivider, 3.75f, 10f), ref zoomVelocity, smoothTime);
+        halfHeight = Camera.main.orthographicSize;
+        halfWidth = Camera.main.aspect * halfHeight;
+
         float x = currentRoom.transform.position.x;
         float y = currentRoom.transform.position.y;
 
@@ -50,7 +60,7 @@ public class CameraController : MonoBehaviour
             {
                 changingScenes = false;
             }
-        } else {
+        } else if (!shaking) {
             transform.position = targetPosition;
         }
     }
@@ -59,6 +69,35 @@ public class CameraController : MonoBehaviour
         Debug.Log("Room is now " + room);
         changingScenes = true;
         currentRoom = room;
+    }
+
+    public void Shake(float duration, float magnitude) {
+        StartCoroutine(ShakeRoutine(duration, magnitude));
+    }
+
+    IEnumerator ShakeRoutine(float duration, float magnitude) {
+        shaking = true;
+        float elapsed = 0f;
+        
+        while (elapsed < duration)
+        {
+            float x = currentRoom.transform.position.x;
+            float y = currentRoom.transform.position.y;
+
+            Vector3 targetPosition = new Vector3(
+                Mathf.Clamp(transformToFollow.position.x, currentRoom.topLeft.x + halfWidth + x, currentRoom.bottomRight.x - halfWidth + x),
+                Mathf.Clamp(transformToFollow.position.y, currentRoom.bottomRight.y + halfHeight + y, currentRoom.topLeft.y - halfHeight + y),
+                transform.position.z
+            );
+            float dX = Random.Range(-1f, 1f) * magnitude;
+            float dY = Random.Range(-1f, 1f) * magnitude;
+
+            transform.position = new Vector3(targetPosition.x + dX, targetPosition.y + dY, transform.position.z);
+            elapsed += Time.deltaTime;
+            yield return 0;
+        }
+
+        shaking = false;
     }
 
     //Not actually needed below here

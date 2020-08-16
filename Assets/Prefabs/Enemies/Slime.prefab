@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 8168502535345165797}
   - component: {fileID: 8168502535345165794}
   - component: {fileID: 8395885587577132947}
+  - component: {fileID: -6588548072070696082}
   m_Layer: 9
   m_Name: Slime
   m_TagString: Enemy
@@ -31,7 +32,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 162321359935268949}
+  - {fileID: 5860439469053588814}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -141,7 +142,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 8168502535345165794}
   velocity: {x: 0, y: 0, z: 0}
+  floatingTextPrefab: {fileID: 7735772157588086534, guid: abef5a1afa3aa1c4d9b76e1a56f6cbbb,
+    type: 3}
   health: 50
+  room: {fileID: 0}
   player: {fileID: 0}
   particleControllerPrefab: {fileID: 4310040926766669324, guid: f5a911a8a441d08429ba85b58edc6ea1,
     type: 3}
@@ -151,7 +155,28 @@ MonoBehaviour:
   isPoisoned: 0
   wet: 0
   spriteRenderer: {fileID: 0}
---- !u!1001 &8920153760663971607
+--- !u!50 &-6588548072070696082
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8168502535345165792}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!1001 &2944817983534791180
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -218,16 +243,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Health Bar
       objectReference: {fileID: 0}
-    - target: {fileID: 8757934467413954380, guid: 7cc0e54fccc32894ca16c563098ed5a6,
-        type: 3}
-      propertyPath: enemy
-      value: 
-      objectReference: {fileID: 8395885587577132947}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7cc0e54fccc32894ca16c563098ed5a6, type: 3}
---- !u!4 &162321359935268949 stripped
+--- !u!4 &5860439469053588814 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8757934467413954370, guid: 7cc0e54fccc32894ca16c563098ed5a6,
     type: 3}
-  m_PrefabInstance: {fileID: 8920153760663971607}
+  m_PrefabInstance: {fileID: 2944817983534791180}
   m_PrefabAsset: {fileID: 0}

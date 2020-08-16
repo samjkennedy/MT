@@ -12,12 +12,16 @@ public abstract class PhysicsObject : MonoBehaviour
     public virtual void Start()
     {
         controller = GetComponent<Controller2D>();
-        velocity = Vector3.zero;
     }
 
     public virtual void Update()
     {
         //Prevent gravity accumulation
+        if (controller.collisions.below) {
+            //friction
+            velocity.y = -(velocity.y - 1f * Time.deltaTime);
+            velocity.x = Mathf.Max(0f, velocity.x - 1f * Time.deltaTime);
+        }
         if (controller.collisions.above || controller.collisions.below) {
             velocity.y = 0;
         }

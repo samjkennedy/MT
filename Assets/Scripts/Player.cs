@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
     private int remainingExtraJumps = 1;
 
     public Vector3 velocity;
+    public Vector3 lookDirection;
     private float velocityXSmoothing;
 
     //Wall jumping
@@ -68,16 +69,20 @@ public class Player : MonoBehaviour
         if (aimDirection.magnitude > 0) {  
             if (aimDirection.x > 0 && spriteRenderer.flipX) {
                 spriteRenderer.flipX = false;
+                lookDirection = Vector3.right;
             }
             if (aimDirection.x < 0 && !spriteRenderer.flipX) {
                 spriteRenderer.flipX = true;
+                lookDirection = Vector3.left;
             }
         } else {
             if (inputX > 0 && spriteRenderer.flipX) {
                 spriteRenderer.flipX = false;
+                lookDirection = Vector3.right;
             }
             if (inputX < 0 && !spriteRenderer.flipX) {
                 spriteRenderer.flipX = true;
+                lookDirection = Vector3.left;
             }
         }
         float inputY = Input.GetAxis("Vertical");
@@ -95,7 +100,7 @@ public class Player : MonoBehaviour
             remainingExtraJumps = extraJumps;
             //Limit how fast we can slide downwards
             if (velocity.y < -wallSlideSpeedMax) {
-                velocity.y = -wallSlideSpeedMax;
+                velocity.y = 0;//-wallSlideSpeedMax;
             }
             //Stop us sliding upwards, if we grab we can't slip upwards
             if (velocity.y > 0) {
@@ -105,6 +110,9 @@ public class Player : MonoBehaviour
 
         //Prevent gravity accumulation
         if (controller.collisions.above || controller.collisions.below) {
+            if (velocity.y <= -25f) {
+                CameraController.instance.Shake(0.1f, 0.05f);
+            }
             velocity.y = 0;
         }
 
@@ -140,7 +148,6 @@ public class Player : MonoBehaviour
                 //Change gravity
                 gravity = -(2 * lowJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
                 jumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;
-                velocity.y = -1f;
             } else if (controller.collisions.below) {
                 //Change gravity
                 gravity = -(2 * lowJumpHeight) / Mathf.Pow(timeToJumpApex, 2);
@@ -166,9 +173,7 @@ public class Player : MonoBehaviour
         }
 
         //Ceiling hanging (Doesn't fucking work yet, why??)
-        if (hanging) {
-            //velocity = new Vector2(0, 0);
-        } else {
+        if (!holding && !controller.collisions.below) {
             //Gravity
             velocity.y += gravity * Time.deltaTime;
         }
@@ -181,14 +186,15 @@ public class Player : MonoBehaviour
             return;
         }
         StartCoroutine(InvincibleFlicker());
-        health.Decrease(damage);
-        if (health.GetCurrentHealth() <= 0) {
+        HealthController.instance.Decrease(damage);
+        CameraController.instance.Shake(0.2f, 0.1f * damage);
+        if (HealthController.instance.GetCurrentHealth() <= 0) {
             Destroy(gameObject); //TODO: better death
         }
     }
 
     public void Heal(int amount) {
-        health.Increase(amount);
+        HealthController.instance.Increase(amount);
     }
 
     IEnumerator InvincibleFlicker() {

@@ -18,6 +18,7 @@ public class HealthBar : MonoBehaviour
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
+        enemy = transform.parent.GetComponent<Enemy>();
         maxHealth = enemy.health;
     }
 

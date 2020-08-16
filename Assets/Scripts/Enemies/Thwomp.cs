@@ -27,7 +27,7 @@ public class Thwomp : Enemy
             GetBounds().min.y - 0.001f
         );
 
-        RaycastHit2D hit = Physics2D.Raycast(raycastOrigin, Vector2.down);
+        RaycastHit2D hit = Physics2D.Raycast(raycastOrigin, Vector2.down, Mathf.Infinity, 1 << 8);
         
         if (!isFalling && hit && hit.transform == player.transform) {
             isFalling = true;
@@ -61,7 +61,11 @@ public class Thwomp : Enemy
     }
 
     public override void Hit(Spell spell) {
-        return;
+        TakeDamage(0);
+    }
+
+    public override bool IsKillable() {
+        return false;
     }
 
     public override float GetGravity() {

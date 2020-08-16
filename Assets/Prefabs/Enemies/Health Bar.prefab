@@ -44,6 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6da15c4d561489f41a2eae7cf8bbf83f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  floatingTextPrefab: {fileID: 7735772157588086534, guid: abef5a1afa3aa1c4d9b76e1a56f6cbbb,
+    type: 3}
   healthBars:
   - {fileID: 7974214336998857224, guid: 07a1f5b1b33685541af75485084ac632, type: 3}
   - {fileID: 5269295390328930182, guid: 07a1f5b1b33685541af75485084ac632, type: 3}
@@ -58,7 +60,6 @@ MonoBehaviour:
   - {fileID: -2394298020685852305, guid: 07a1f5b1b33685541af75485084ac632, type: 3}
   - {fileID: 8119547141247604705, guid: 07a1f5b1b33685541af75485084ac632, type: 3}
   - {fileID: 7417496970729825955, guid: 07a1f5b1b33685541af75485084ac632, type: 3}
-  enemy: {fileID: 0}
 --- !u!212 &8757934467413954381
 SpriteRenderer:
   m_ObjectHideFlags: 0

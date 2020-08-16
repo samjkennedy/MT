@@ -10,6 +10,7 @@ public class EnemySpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Instantiate(enemies[Random.Range(0, enemies.Length)], transform.position, Quaternion.identity);
+        Instantiate(enemies[Random.Range(0, enemies.Length)], transform.position, Quaternion.identity, transform.parent.transform);
+        Destroy(gameObject);
     }
 }
